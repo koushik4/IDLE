@@ -34,29 +34,18 @@ public class Main extends JFrame {
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        int room_id = Integer.parseInt(textField.getText());
-                        if(!text.hm.containsKey(room_id)){
-                            JDialog dialog = new JDialog(frame,"Error",true);
-                            dialog.setLayout(new FlowLayout());
-                            JLabel label = new JLabel("Room Number does not exist");
-                            JButton button1 = new JButton("ok");
-                            button1.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    dialog.setVisible(false);
-                                }
-                            });
-                            dialog.add(label);
-                            dialog.add(button1);
-                            dialog.setSize(200,200);
-                            dialog.setVisible(true);
-                            return;
-                        }
-                        Runnable user = new User(text,room_id);
-                        Thread t = new Thread(user);
-                        t.setName(String.valueOf(text.hm.getOrDefault(room_id,new ArrayList<>()).size()));
-                        t.start();
-                        f.setVisible(false);
+                        try {
+                            int room_id = Integer.parseInt(textField.getText());
+                            if(!text.hm.containsKey(room_id)){
+                                OpenDialog();
+                                return;
+                            }
+                            Runnable user = new User(text,room_id);
+                            Thread t = new Thread(user);
+                            t.setName(String.valueOf(text.hm.getOrDefault(room_id,new ArrayList<>()).size()));
+                            t.start();
+                            f.setVisible(false);
+                        }catch (Exception exception){OpenDialog();}
                     }
                 });
             }
@@ -78,6 +67,22 @@ public class Main extends JFrame {
 
 
         frame.setVisible(true);
+    }
+    public void OpenDialog(){
+        JDialog dialog = new JDialog(frame,"Error",true);
+        dialog.setLayout(new FlowLayout());
+        JLabel label = new JLabel("Room Number does not exist");
+        JButton button1 = new JButton("ok");
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.setVisible(false);
+            }
+        });
+        dialog.add(label);
+        dialog.add(button1);
+        dialog.setSize(200,200);
+        dialog.setVisible(true);
     }
     public static void main(String[] args){
         new Main();
