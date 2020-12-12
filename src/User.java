@@ -11,6 +11,7 @@ import java.util.HashMap;
 // NUMBER OF ROOMS AND
 // NUMBERS OF USERS IN EACH ROOM AS LIST
 // LIST HAS CONTENT IN THEIR RESPECTIVELY
+//CHALO ITS SEE
 class Text {
     HashMap<Integer,ArrayList<String>> hm;
     boolean flag;
