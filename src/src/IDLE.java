@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import src.Suggestion;
 public class IDLE extends JFrame{
-    JFrame frame = new JFrame("Online Coding");
-    JTextArea textEditor; //CODE
-    JPanel text_settings  = new JPanel();//ALL FONT AND TEXT SETTINGS
-    JPanel left_line_counter = new JPanel();//FOR THE LINE NUMBER
-    JPanel lines_and_code = new JPanel();//LINE NUMBER + CODE
-    JComboBox text_settings_font_size;//FONT SIZE
-    JComboBox text_settings_font;//FONT
+    public JFrame frame = new JFrame("Online Coding");
+    public JTextArea textEditor; //CODE
+    public JPanel text_settings  = new JPanel();//ALL FONT AND TEXT SETTINGS
+    public JPanel left_line_counter = new JPanel();//FOR THE LINE NUMBER
+    public JPanel lines_and_code = new JPanel();//LINE NUMBER + CODE
+    public JComboBox text_settings_font_size;//FONT SIZE
+    public JComboBox text_settings_font;//FONT
     JComboBox text_settings_language;//PROGRAMMING LANGUAGE
     JComboBox text_settings_mode;//DARK MODE
     JTextField text_settings_find;//TEXT FIELD FOR FIND WORD
@@ -28,7 +28,7 @@ public class IDLE extends JFrame{
 
     String buffer = ""; //COPY,PASTE
     JLabel[] lines = new JLabel[1000];//LINES
-    IDLE() {
+    public IDLE() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         lines_and_code.setLayout(new BorderLayout());
