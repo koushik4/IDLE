@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 // NUMBER OF ROOMS AND
 // NUMBERS OF USERS IN EACH ROOM AS LIST
-// LIST HAS CONTENT IN THEIR RESPECTIVEly
+// LIST HAS CONTENT IN THEIR RESPECTIVELY
 class Text {
     HashMap<Integer,ArrayList<String>> hm;
     boolean flag;
