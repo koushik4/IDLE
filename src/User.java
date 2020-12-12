@@ -110,19 +110,4 @@ public class User implements Runnable{
             }catch (Exception e){}
         }
     }
-    public static void main(String[] args){
-        Text text = new Text();
-        Runnable u1 = new User(text,0);
-        Runnable u2 = new User(text,0);
-        Runnable u3 = new User(text,0);
-        Thread user1 = new Thread(u1);
-        user1.setName("1");
-        Thread user2 = new Thread(u2);
-        user2.setName("2");
-        Thread user3 = new Thread(u3);
-        user3.setName("3");
-        user1.start();
-        user2.start();
-        user3.start();
-    }
 }

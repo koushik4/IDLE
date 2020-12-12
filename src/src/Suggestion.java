@@ -70,7 +70,6 @@ public class Suggestion
      void addBasics() {
       //  this.insert("int");
         for(String s:keywords.split(" ")){
-            if(s.equals("int"))System.out.println(s);
             if(!s.equals(""))this.insert(s.trim());
         }
     }

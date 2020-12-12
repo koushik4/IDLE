@@ -29,7 +29,6 @@ public class IDLE extends JFrame{
     String buffer = ""; //COPY,PASTE
     JLabel[] lines = new JLabel[1000];//LINES
     public IDLE() {
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         lines_and_code.setLayout(new BorderLayout());
         file_name = "";
@@ -106,7 +105,6 @@ public class IDLE extends JFrame{
         int option = fileChooser.showSaveDialog(this.frame);
         if(option == JFileChooser.APPROVE_OPTION){
             File file = fileChooser.getSelectedFile();
-            System.out.println(this.file_name);
             try {
                 name = file.getAbsolutePath();
                 FileWriter fileWriter = new FileWriter(file);
@@ -391,9 +389,5 @@ public class IDLE extends JFrame{
 
             }
         });
-    }
-
-    public static void main(String[] args) {
-        new IDLE();
     }
 }
