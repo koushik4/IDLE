@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import src.JDBC;
 
 // NUMBER OF ROOMS AND
 // NUMBERS OF USERS IN EACH ROOM AS LIST
@@ -22,20 +23,25 @@ class Text {
 }
 public class User implements Runnable{
     int room_id;//ID OF ROOM
+    int user_id;
     IDLE idle;//PROMPT FOR USER
-    Text text;
+    JDBC jdbc;
     //START THE IDLE AND INITIATE EVERYTHING
-    User(Text t,int room_id){
+    User(JDBC jdbc,int room_id) throws Exception{
         this.room_id = room_id;
         idle = new IDLE();
-        text = t;
-        if(!text.hm.containsKey(room_id))text.hm.put(room_id,new ArrayList<>());
-        text.hm.get(room_id).add("");
+        this.jdbc = jdbc;
+        int id = jdbc.get_id()+1;
+        this.user_id = id;
+        jdbc.insertUser(room_id,"",id);
+
     }
 
     //COMBINE ALL CODES IN THE SPECIFIC ROOM ID
-    public String get_String(int room_id){
-        ArrayList<String> user_code = text.hm.get(room_id);
+    public String get_String(int room_id) throws Exception{
+        HashMap<Integer,String> hm = jdbc.getCode(room_id);
+        ArrayList<String> user_code = new ArrayList<>();
+        for(String s:hm.values())user_code.add(s);
         int max_len = 0;
         for(String s:user_code)max_len = Math.max(s.length(),max_len);
         int i = 0;
@@ -52,9 +58,8 @@ public class User implements Runnable{
     }
 
     //WHENEVER USER TYPES ANYTHING UPDATE THEAT IN THE LIST
-    public void add_to_text(String s,int room_id){
-        int index = Integer.parseInt(Thread.currentThread().getName())-1;
-        text.hm.get(room_id).set(index,s);
+    public void add_to_text(String s,int room_id) throws Exception{
+        jdbc.updatetUser(room_id,s,user_id);
     }
 
     //UPDATES THE CODE IN LIST AND GETS THE COMBINES STRING
@@ -68,17 +73,19 @@ public class User implements Runnable{
                 char c = e.getKeyChar();
                 int i = (int)c;
                 if(i == 8){
-                    text.flag  = true;
+                    jdbc.flag  = true;
                     int index = idle.textEditor.getCaretPosition();
-                    ArrayList<String> user = text.hm.get(room_id);
-                    for(int j=0;j<user.size();j++){
-                        String s = user.get(j);
-                        if(s.length()<=index)continue;
-                        s = s.substring(0,index)+s.substring(index+1);
-                        text.hm.get(room_id).set(j,s);
-                    }
+                    try {
+                        HashMap<Integer, String> user = jdbc.getCode(room_id);
+                        for(int j:user.keySet()){
+                            String s = user.get(j);
+                            if(s.length()<=index)continue;
+                            s = s.substring(0,index)+s.substring(index+1);
+                            try{jdbc.updatetUser(room_id,s,j);}catch (Exception exception1){}
+                        }
+                    }catch (Exception exception){}
                 }
-                else text.flag = false;
+                else jdbc.flag = false;
             }
 
             @Override
@@ -91,23 +98,27 @@ public class User implements Runnable{
 
             }
         });
-        while(true) {
-            if(!text.flag) {
-                add_to_text(idle.textEditor.getText(),this.room_id);
-                String s = get_String(this.room_id);
-                int p = idle.textEditor.getCaretPosition();
-                idle.textEditor.setText(s);
-                idle.textEditor.setCaretPosition(p);
+        try {
+            while (true) {
+                if (!jdbc.flag) {
+                    add_to_text(idle.textEditor.getText(), this.room_id);
+                    String s = get_String(this.room_id);
+                    int p = idle.textEditor.getCaretPosition();
+                    idle.textEditor.setText(s);
+                    idle.textEditor.setCaretPosition(s.length());
+                } else {
+                    String s = get_String(this.room_id);
+                    int p = idle.textEditor.getCaretPosition();
+                    idle.textEditor.setText(s);
+                    idle.textEditor.setCaretPosition(s.length());
+                }
+                try {
+                    Thread.sleep(500);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
             }
-            else{
-                String s = get_String(this.room_id);
-                int p = idle.textEditor.getCaretPosition();
-                idle.textEditor.setText(s);
-                idle.textEditor.setCaretPosition(s.length());
-            }
-            try {
-                Thread.sleep(500);
-            }catch (Exception e){}
-        }
+        }catch (Exception e){e.printStackTrace();}
+
     }
 }

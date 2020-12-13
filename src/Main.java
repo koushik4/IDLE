@@ -1,3 +1,5 @@
+import src.JDBC;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -5,13 +7,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Main extends JFrame {
+public class Main extends JFrame  {
     JFrame frame;
     JButton join, create;
-    Text text = new Text();
+    JDBC jdbc;
     int room = 0;
     HashMap<Integer,User> hm = new HashMap<>();
     Main(){
+        try{
+            jdbc = new JDBC();
+        }catch (Exception e){}
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500,500);
@@ -36,13 +41,16 @@ public class Main extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         try {
                             int room_id = Integer.parseInt(textField.getText());
-                            if(!text.hm.containsKey(room_id)){
+                            System.out.println(room_id);
+                            HashMap<Integer,String> hm = jdbc.getCode(room_id);
+                            System.out.println(hm);
+                            if(hm.isEmpty()){
                                 OpenDialog();
                                 return;
                             }
-                            Runnable user = new User(text,room_id);
+                            Runnable user = new User(jdbc,room_id);
                             Thread t = new Thread(user);
-                            t.setName(String.valueOf(text.hm.getOrDefault(room_id,new ArrayList<>()).size()));
+                           // t.setName(String.valueOf(jdbc.hm.getOrDefault(room_id,new ArrayList<>()).size()));
                             t.start();
                             f.setVisible(false);
                         }catch (Exception exception){OpenDialog();}
@@ -53,12 +61,14 @@ public class Main extends JFrame {
         create.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int room_id = room;
-                Runnable user = new User(text,room_id);
-                Thread t = new Thread(user);
-                t.setName(String.valueOf(text.hm.getOrDefault(room_id,new ArrayList<>()).size()));
-                t.start();
-                room++;
+                try {
+                    int room_id = jdbc.get_room_id()+1;
+                    System.out.println(room_id);
+                    Runnable user = new User(jdbc, room_id);
+                    Thread t = new Thread(user);
+                    t.start();
+                    room++;
+                }catch(Exception exception){}
             }
         });
 
@@ -87,5 +97,4 @@ public class Main extends JFrame {
     public static void main(String[] args){
         new Main();
     }
-
 }
